@@ -1,66 +1,66 @@
 # ============================================
-# WeFlow ÁÙÊ±ÈÆ¹ıÊ±¼äËøÆô¶¯½Å±¾
-# ×÷ÓÃ£ºÁÙÊ±¸ÄÏµÍ³Ê±¼ä£¬Æô¶¯ WeFlow£¬10 Ãëºó»Ö¸´Ê±¼ä²¢Í¬²½
-# ÒªÇó£ºÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ PowerShell
+# WeFlow ä¸´æ—¶ç»•è¿‡æ—¶é—´é”å¯åŠ¨è„šæœ¬
+# ä½œç”¨ï¼šä¸´æ—¶æ”¹ç³»ç»Ÿæ—¶é—´ï¼Œå¯åŠ¨ WeFlowï¼Œ10 ç§’åæ¢å¤æ—¶é—´å¹¶åŒæ­¥
+# è¦æ±‚ï¼šä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ PowerShell
 # ============================================
 
 $ErrorActionPreference = "Stop"
 
-# ¼ì²é¹ÜÀíÔ±È¨ÏŞ
+# æ£€æŸ¥ç®¡ç†å‘˜æƒé™
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
-    Write-Host "ÇëÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ´Ë½Å±¾¡£" -ForegroundColor Red
+    Write-Host "è¯·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œæ­¤è„šæœ¬ã€‚" -ForegroundColor Red
     Pause
     exit 1
 }
 
-# ===== ÅäÖÃÇø =====
-# WeFlow Â·¾¶£¬Èç¹û²»ÔÚÄ¬ÈÏÎ»ÖÃÇëĞŞ¸Ä
-$WeFlowPath = "C:\Users\mechrevo\AppData\Local\Programs\WeFlow\WeFlow.exe"
+# ===== é…ç½®åŒº =====
+# WeFlow è·¯å¾„ï¼Œå¦‚æœä¸åœ¨é»˜è®¤ä½ç½®è¯·ä¿®æ”¹
+$WeFlowPath = "C:\Users\ä½ çš„ç”¨æˆ·å\AppData\Local\Programs\WeFlow\WeFlow.exe"
 
-# ÒªÁÙÊ±ÉèÖÃµ½µÄÊ±¼ä£¨±ØĞëÔçÓÚ wcdb_api.dll µÄ¹ıÆÚÊ±¼ä 2026-09-30 23:59:59£©
+# è¦ä¸´æ—¶è®¾ç½®åˆ°çš„æ—¶é—´ï¼ˆå¿…é¡»æ—©äº wcdb_api.dll çš„è¿‡æœŸæ—¶é—´ 2026-09-30 23:59:59ï¼‰
 $FakeDate = Get-Date "2026-07-31 12:00:00"
 
-# Æô¶¯ºóµÈ´ı¶àÉÙÃëÔÙ»Ö¸´ÏµÍ³Ê±¼ä
+# å¯åŠ¨åç­‰å¾…å¤šå°‘ç§’å†æ¢å¤ç³»ç»Ÿæ—¶é—´
 $WaitSeconds = 10
 # ==================
 
-# ¼ì²é WeFlow ÊÇ·ñ´æÔÚ
+# æ£€æŸ¥ WeFlow æ˜¯å¦å­˜åœ¨
 if (-not (Test-Path $WeFlowPath)) {
-    Write-Host "ÕÒ²»µ½ WeFlow£º$WeFlowPath" -ForegroundColor Red
-    Write-Host "ÇëĞŞ¸Ä½Å±¾ÖĞµÄ `$WeFlowPath ±äÁ¿¡£" -ForegroundColor Yellow
+    Write-Host "æ‰¾ä¸åˆ° WeFlowï¼š$WeFlowPath" -ForegroundColor Red
+    Write-Host "è¯·ä¿®æ”¹è„šæœ¬ä¸­çš„ `$WeFlowPath å˜é‡ã€‚" -ForegroundColor Yellow
     Pause
     exit 1
 }
 
-# ¿ÉÑ¡£º¹Ø±ÕÒÑÓĞµÄ WeFlow ½ø³Ì£¬±ÜÃâ¾É½ø³Ì¸ÉÈÅ
+# å¯é€‰ï¼šå…³é—­å·²æœ‰çš„ WeFlow è¿›ç¨‹ï¼Œé¿å…æ—§è¿›ç¨‹å¹²æ‰°
 # Get-Process WeFlow -ErrorAction SilentlyContinue | Stop-Process -Force
 
-Write-Host "[1/6] ¼ÇÂ¼µ±Ç°ÏµÍ³Ê±¼ä..."
+Write-Host "[1/6] è®°å½•å½“å‰ç³»ç»Ÿæ—¶é—´..."
 $originalTime = Get-Date
-Write-Host "      µ±Ç°Ê±¼ä£º$originalTime"
+Write-Host "      å½“å‰æ—¶é—´ï¼š$originalTime"
 
-Write-Host "[2/6] Í£Ö¹ Windows Ê±¼ä·şÎñ (W32Time)..."
+Write-Host "[2/6] åœæ­¢ Windows æ—¶é—´æœåŠ¡ (W32Time)..."
 Stop-Service -Name W32Time -Force -ErrorAction SilentlyContinue
 
-Write-Host "[3/6] ½«ÏµÍ³Ê±¼äÉèÖÃÎª $FakeDate ..."
+Write-Host "[3/6] å°†ç³»ç»Ÿæ—¶é—´è®¾ç½®ä¸º $FakeDate ..."
 Set-Date -Date $FakeDate
 
-Write-Host "[4/6] Æô¶¯ WeFlow..."
+Write-Host "[4/6] å¯åŠ¨ WeFlow..."
 Start-Process -FilePath $WeFlowPath
 
-Write-Host "[5/6] µÈ´ı $WaitSeconds Ãë£¬ÈÃ WeFlow Íê³É³õÊ¼»¯..."
+Write-Host "[5/6] ç­‰å¾… $WaitSeconds ç§’ï¼Œè®© WeFlow å®Œæˆåˆå§‹åŒ–..."
 Start-Sleep -Seconds $WaitSeconds
 
-Write-Host "[6/6] »Ö¸´ÏµÍ³Ê±¼äµ½ $originalTime ..."
+Write-Host "[6/6] æ¢å¤ç³»ç»Ÿæ—¶é—´åˆ° $originalTime ..."
 Set-Date -Date $originalTime
 
-Write-Host "      Æô¶¯ Windows Ê±¼ä·şÎñ²¢Ç¿ÖÆÍ¬²½..."
+Write-Host "      å¯åŠ¨ Windows æ—¶é—´æœåŠ¡å¹¶å¼ºåˆ¶åŒæ­¥..."
 Start-Service -Name W32Time -ErrorAction SilentlyContinue
 Start-Sleep -Seconds 2
 w32tm /resync /force | Out-Null
 
 Write-Host ""
-Write-Host "Íê³É¡£WeFlow Ó¦ÒÑÆô¶¯£¬ÏµÍ³Ê±¼äÒÑ»Ö¸´¡£" -ForegroundColor Green
-Write-Host "Èç¹û WeFlow ÈÔÌáÊ¾ -101£¬ËµÃ÷ËüÔÚÆô¶¯ºóÖØĞÂ¼ì²éÁËÊ±¼ä¡£" -ForegroundColor Yellow
+Write-Host "å®Œæˆã€‚WeFlow åº”å·²å¯åŠ¨ï¼Œç³»ç»Ÿæ—¶é—´å·²æ¢å¤ã€‚" -ForegroundColor Green
+Write-Host "å¦‚æœ WeFlow ä»æç¤º -101ï¼Œè¯´æ˜å®ƒåœ¨å¯åŠ¨åé‡æ–°æ£€æŸ¥äº†æ—¶é—´ã€‚" -ForegroundColor Yellow
 Pause
