@@ -83,12 +83,18 @@ IEX(New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/
 
 | 变量 | 说明 | 默认值 |
 |------|------|--------|
-| `$WeFlowPath` | WeFlow 可执行文件路径 | `C:\Users\你的用户名\AppData\Local\Programs\WeFlow\WeFlow.exe` |
 | `$FakeDate` | 临时设置的系统时间，必须早于 `2026-09-30` | `2026-07-31 12:00:00` |
 | `$WaitSeconds` | 启动 WeFlow 后等待多少秒再恢复时间 | `10` |
 
-如果 WeFlow 安装在其他位置，请修改 `$WeFlowPath`。  
 如果 10 秒不够，可以适当增大 `$WaitSeconds`（例如 15 或 20）。
+
+另外，脚本会自动按以下顺序查找 WeFlow：
+
+1. `%LOCALAPPDATA%\Programs\WeFlow\WeFlow.exe`（当前用户默认安装）
+2. `%ProgramFiles%\WeFlow\WeFlow.exe`（所有用户默认安装）
+3. `%ProgramFiles(x86)%\WeFlow\WeFlow.exe`（32 位安装）
+
+如果都不存在，脚本会提示你手动修改 `$possiblePaths` 列表。
 
 ---
 
